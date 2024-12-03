@@ -13,6 +13,7 @@ exports.config = {
         maxInstances: 5,
         browserName: 'chrome',
         acceptInsecureCerts: true,
+        //enable headless mode in chrome
         'goog:chromeOptions': {
             args: ['headless', 'disable-gpu']
         }
@@ -21,14 +22,15 @@ exports.config = {
         maxInstances: 5,
         browserName: 'firefox',
         acceptInsecureCerts: true,
+        //enable headless mode in firefox
         'moz:firefoxOptions': {
-            args: ['-headless']
+            //args: ['-headless']
         }
     }
 ],
     logLevel: 'error',
     bail: 0,
-    baseUrl: 'https://e629ed6b-4969-442b-987e-087e81eb10ca.serverhub.practicum-services.com',
+    baseUrl:'https://cnt-b5b2b231-df01-45e0-95f2-de1cd31d97b9.containerhub.tripleten-services.com',
     waitforTimeout: 10000,
     connectionRetryTimeout: 120000,
     connectionRetryCount: 3,
