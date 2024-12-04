@@ -5,18 +5,16 @@ module.exports = {
     phoneNumberField: "#phone",
     codeField: "#code",
     commentField: "#comment",
-    cardNumberField: "#number",
-    cardCodeField: '.card-second-row #code', 
-    cardCVVField: '#code',
-    linkButton: "button=Link", 
+    cardNumberField: "#number", // Selector for card number input
+    cardCodeField: "#code", // Selector for card code input
+    linkButton: "button=Link", // Selector for link button
   
     // Modals
-    carSearchModal: ".car-search-modal",
-    driverInfoModal: ".driver-info-modal",
-    phoneNumberModal: ".modal",
+    carSearchModal: ".car-search-modal", // Updated selector for car search modal
+    driverInfoModal: ".driver-info-modal", // Ensure this selector matches your HTML structure
+    phoneNumberModal: ".modal", // Selector for phone number modal
     driverInfoModal: 'div*=The driver will arrive',
-    paymentPicker: ".payment-picker.open",
-    cardModal: "#add-card-modal",
+    paymentPicker: ".payment-picker.open", // Selector for payment modal,
   
     // Overlay
     overlay: ".overlay",
@@ -24,20 +22,10 @@ module.exports = {
     // Buttons
     callATaxiButton: "button=Call a taxi",
     phoneNumberButton: '//div[starts-with(text(), "Phone number")]',
-    supportiveButton: 'div=Supportive',
     nextButton: "button=Next",
     confirmButton: "button=Confirm",
-    placeOrderButton: ".smart-button-main=Order",
-    addCardButton: 'div.pp-title=Add card',
-    cardModalCloseButton: '.payment-picker .section.active .close-button',
-    addedCard: 'div=Card',
-    linkCardButton: 'button=Link',
-    planButtonActive: 'div=Supportive',
-    paymentMethod: '//*[@id="root"]/div/div[3]/div[3]/div[2]/div[2]/div[2]',
-    blanketAndHandkerchiefs: '.switch-input',
-    iceCreamCounterPlusButton: '.counter-plus',
-    orderButton: 'button=order',
-    blanketSwitchSelector: '//*[@id="root"]/div/div[3]/div[3]/div[2]/div[2]/div[4]/div[2]/div[1]/div/div[2]/div/span',
+    placeOrderButton: ".smart-button-main=Order", // Added selector for the place order button
+  
     // Functions
     waitForOverlayToDisappear: async function () {
       const overlay = await $(this.overlay);
@@ -93,27 +81,21 @@ module.exports = {
   
     selectVehicleType: async function (planName) {
       await this.waitForOverlayToDisappear();
-      const vehicleType = await $(`div=${planName}`);
+      const vehicleType = await $(`div=${planName}`); // Dynamically select vehicle type
       await vehicleType.waitForDisplayed();
       await vehicleType.click();
     },
   
     orderBlanketAndHandkerchiefs: async function () {
-      const blanketSwitchLabel = await $(
-        "div.r-sw-label=Blanket and handkerchiefs"
-      );
-      const blanketSwitchInput = await $('.switch');
-  
-      // Wait for the overlay to disappear
+      const blanketSwitchLabel = await $("div.r-sw-label=Blanket and handkerchiefs");
+      const blanketSwitchInput = await $(".switch");
       await this.waitForOverlayToDisappear();
-  
-      // Ensure the element is in view before clicking
       await blanketSwitchInput.scrollIntoView();
-      await blanketSwitchInput.waitForClickable({ timeout: 10000 }); // Wait for the element to be clickable
+      await blanketSwitchInput.waitForClickable({ timeout: 10000 });
   
       const isChecked = await blanketSwitchInput.isSelected();
       if (!isChecked) {
-        await blanketSwitchInput.click(); // Click to enable the switch
+        await blanketSwitchInput.click();
       }
     },
   
@@ -121,7 +103,7 @@ module.exports = {
       const counterValueElement = await $("div.counter-value");
       await counterValueElement.waitForDisplayed();
       const currentValueText = await counterValueElement.getText();
-      const currentValue = parseInt(currentValueText, 10);
+      const currentValue = parseInt(currentValueText, 10); // Ensure conversion to a number
   
       if (isNaN(currentValue)) {
         throw new Error("Failed to retrieve current ice cream count.");
@@ -137,22 +119,22 @@ module.exports = {
         }
       }
   
+      // Assertion to verify the final count
       const finalValueText = await counterValueElement.getText();
       const finalValue = parseInt(finalValueText, 10);
       expect(finalValue).toBe(quantity);
     },
   
-    addCreditCard: async function (cardNumber, cvv) {
-      const cardModal = await $(this.cardModal);
-      await cardModal.waitForDisplayed({ timeout: 15000 });
-      const cardNumberField = await $(this.cardNumberField);
-      const cardCVVField = await $(this.cardCVVField);
-      await cardNumberField.waitForDisplayed({ timeout: 15000 });
-      await cardNumberField.setValue(cardNumber);
-      await cardCVVField.setValue(cvv);
-      await cardCVVField.keys("Tab");
-      await $(this.addCardButton).waitForEnabled();
-      await $(this.addCardButton).click();
+    selectPaymentMethod: async function () {
+      const paymentMethodButton = await $(".pp-button.filled");
+      await paymentMethodButton.waitForDisplayed({ timeout: 15000 });
+      if (await paymentMethodButton.isClickable()) {
+        await paymentMethodButton.click();
+      } else {
+        console.log("Payment method button is not clickable.");
+      }
+      const paymentPicker = await $(this.paymentPicker);
+      await paymentPicker.waitForDisplayed({ timeout: 15000 });
     },
   
     verifyCarSearchModal: async function () {
@@ -176,13 +158,14 @@ module.exports = {
       await orderButton.click();
     },
   
+    // Additional methods as needed for the new functionality...
     waitForDriverAssignmentCountdown: async function (timeout = 45000) {
-      await browser.pause(timeout);
+      // Implement countdown wait logic if necessary
+      await browser.pause(timeout); // Placeholder for actual countdown handling
     },
   
     verifyDriverInfoModalTitle: async function (expectedTitle) {
-      const driverInfoModal = await $(this.driverInfoModal);
-      const driverInfoModalTitle = await driverInfoModal.$(".driver-info-modal-title");
+      const driverInfoModalTitle = await this.driverInfoModal.$(".driver-info-modal-title"); // Adjust as needed
       await driverInfoModalTitle.waitForDisplayed();
       const titleText = await driverInfoModalTitle.getText();
       return titleText === expectedTitle;
