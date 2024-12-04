@@ -73,7 +73,7 @@ describe("Create an order", () => {
     const cardNumberField = await $(page.cardNumberField);
     await cardNumberField.waitForDisplayed();
     await cardNumberField.click();
-    await cardNumberField.setValue("1234 5678 9000 1111");
+    await cardNumberField.setValue("1234 5678 9123");
     const cardCodeField = await $(page.cardCodeField);
     await cardCodeField.waitForDisplayed();
     await cardCodeField.click();
