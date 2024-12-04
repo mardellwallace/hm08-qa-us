@@ -29,28 +29,50 @@ describe("Create an order", () => {
     await expect(messageField).toHaveValue(message);
   });
 
-  it("should select a supportive plan", async () => {
+  it ("should select a supportive plan", async () => {
     await browser.url("/");
     await page.fillAddresses("East 2nd Street, 601", "1300 1st St");
     await page.selectSupportivePlan();
+    const supportiveButton = await $(page.supportiveButton); 
+
+     await expect(supportiveButton).toBeDisplayed(); 
+
   });
 
   it("should order blanket and handkerchiefs", async () => {
     await browser.url("/");
     await page.fillAddresses("East 2nd Street, 601", "1300 1st St");
     await page.orderBlanketAndHandkerchiefs();
+    const blanketSwitchLabel = await $(
+        "div.r-sw-label=Blanket and handkerchiefs"
+      );
+      const blanketSwitchInput = await blanketSwitchLabel
+        .$("..")
+        .$("input.switch-input");
+      await expect(blanketSwitchInput).toBeChecked();
+  
   });
 
   it("should order 2 ice creams", async () => {
     await browser.url("/");
     await page.fillAddresses("East 2nd Street, 601", "1300 1st St");
-    await page.orderIceCreams(2);
+    const iceCreamCounterPlusButton = await $(page.iceCreamCounterPlusButton);
+    await iceCreamCounterPlusButton.waitForDisplayed();
+    await iceCreamCounterPlusButton.click();
+    await iceCreamCounterPlusButton.click();
+    const iceCreamValue = 2;
+    await expect($(`div=${iceCreamValue}`)).toBeExisting();
+
   });
 
-  it("should select a payment method", async () => {
+  it.only ("should select a payment method", async () => {
     await browser.url("/");
     await page.fillAddresses("East 2nd Street, 601", "1300 1st St");
     await page.selectPaymentMethod();
+    const cardPaymentMethodIcon = await $(page.cardPaymentMethodIcon); 
+    await cardPaymentMethodIcon.waitForDisplayed();
+    await expect(await $(cardPaymentMethodIcon)).toBeExisting(); 
+
   });
 
   it("should display car search modal", async () => {
